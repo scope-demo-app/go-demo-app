@@ -5,31 +5,40 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+	"go.undefinedlabs.com/scopeagent/agent"
+	"go.undefinedlabs.com/scopeagent/instrumentation/nethttp"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
+	"path"
 	"syscall"
 	"time"
 )
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Llongfile)
-	log.Println("Starting server...")
-	/*
-	if err := createSchema(); err != nil {
-		log.Println("Error:", err)
+	nethttp.PatchHttpDefaultClient()
+	scopeAgent, err := agent.NewAgent(agent.WithSetGlobalTracer(), agent.WithDebugEnabled())
+	if err != nil {
+		panic(err)
 	}
-	*/
+	defer scopeAgent.Stop()
+
+	log.Println("Starting server...")
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
-	r.GET("/", helloRoute)
+	r.GET("/", func(c *gin.Context) {
+		c.Status(http.StatusOK)
+	})
+	addImageServiceEndpoints(r)
 
 	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: r,
+		Addr:    ":8081",
+		Handler: nethttp.Middleware(r),
 	}
 
 	go func() {
@@ -53,6 +62,13 @@ func main() {
 	log.Println("Server exiting")
 }
 
-func helloRoute(c *gin.Context) {
-	c.JSON(200, "Hello world")
+func getUrl(base string, pathValues ...string) (string, error) {
+	url, err := url.Parse(base)
+	if err != nil {
+		return "", err
+	}
+	args := append([]string{}, url.Path)
+	args = append(args, pathValues...)
+	url.Path = path.Join(args...)
+	return url.String(), nil
 }

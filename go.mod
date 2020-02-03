@@ -6,8 +6,6 @@ require (
 	github.com/gin-contrib/cors v1.3.0
 	github.com/gin-contrib/gzip v0.0.1
 	github.com/gin-gonic/gin v1.5.0
-	github.com/go-pg/pg v8.0.6+incompatible
-	github.com/gofrs/uuid v3.2.0+incompatible
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	mellium.im/sasl v0.2.1 // indirect
+	github.com/opentracing/opentracing-go v1.1.0
+	go.undefinedlabs.com/scopeagent v0.1.7
 )
