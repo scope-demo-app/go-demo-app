@@ -16,13 +16,15 @@ import (
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Llongfile)
 	log.Println("Starting server...")
+	/*
 	if err := createSchema(); err != nil {
 		log.Println("Error:", err)
 	}
+	*/
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(cors.Default())
-	r.Use(gzip.Gzip(gzip.BestSpeed))
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
 	r.GET("/", helloRoute)
 
 	srv := &http.Server{
