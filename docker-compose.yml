@@ -1,0 +1,23 @@
+version: "3.4"
+
+services:
+  go-demo-app:
+    build: .
+    ports:
+      - 8081:8081
+    volumes:
+      - ~/.scope:/root/.scope
+    environment:
+      - CI
+      - SCOPE_DSN
+      - CIRCLECI
+      - CIRCLE_BUILD_NUM
+      - CIRCLE_BUILD_URL
+      - JENKINS_URL
+      - BUILD_ID
+      - BUILD_NUMBER
+      - BUILD_URL
+      - GIT_COMMIT=$GIT_COMMIT
+      - APP_IMAGES_SVC=http://192.168.1.28:8080
+      - APP_RESTAURANT_SVC=http://192.168.1.215:8081
+      - APP_RATING_SVC=http://192.168.1.155:8000
