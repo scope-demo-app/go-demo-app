@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	imagesApiUrl = "http://localhost:8080"
+	imagesApiUrl = "http://192.168.1.28:8080"
 )
 
 func init() {
@@ -92,7 +92,7 @@ func GetImagesByRestaurant(ctx context.Context, restaurantId string) ([]string, 
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("server didn't respond OK")
+		return nil, errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	var images []string
 	json.NewDecoder(resp.Body).Decode(&images)
@@ -119,7 +119,7 @@ func AddImageToRestaurant(ctx context.Context, restaurantId string, contentType 
 
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusAccepted {
-		return "", errors.New("server didn't respond OK")
+		return "", errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	var imageId string
 	json.NewDecoder(resp.Body).Decode(&imageId)
@@ -187,7 +187,7 @@ func DeleteImage(ctx context.Context, imageId string) error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusAccepted {
-		return errors.New("server didn't respond OK")
+		return errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	return nil
 }

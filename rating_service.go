@@ -61,7 +61,7 @@ func GetRatingByRestaurantId(ctx context.Context, restaurantId string) (*float64
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("server didn't respond OK")
+		return nil, errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 
 	var ratings struct {
@@ -87,7 +87,7 @@ func AddRatingToRestaurant(ctx context.Context, restaurantId string, rating int)
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusAccepted {
-		return errors.New("server didn't respond OK")
+		return errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	return nil
 }

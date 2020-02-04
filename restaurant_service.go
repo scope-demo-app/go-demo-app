@@ -230,7 +230,7 @@ func GetAllRestaurants(ctx context.Context) ([]restaurantApi, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("server didn't respond OK")
+		return nil, errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	var rest []restaurantApi
 	json.NewDecoder(resp.Body).Decode(&rest)
@@ -253,7 +253,7 @@ func GetRestaurantById(ctx context.Context, restaurantId string) (*restaurantApi
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("server didn't respond OK")
+		return nil, errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	var rest restaurantApi
 	json.NewDecoder(resp.Body).Decode(&rest)
@@ -277,7 +277,7 @@ func GetAllRestaurantsByName(ctx context.Context, name string) ([]restaurantApi,
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("server didn't respond OK")
+		return nil, errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	var rest []restaurantApi
 	json.NewDecoder(resp.Body).Decode(&rest)
@@ -300,7 +300,7 @@ func DeleteRestaurantById(ctx context.Context, restaurantId string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusAccepted {
-		return errors.New("server didn't respond OK")
+		return errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	return nil
 }
@@ -326,7 +326,7 @@ func AddRestaurant(ctx context.Context, post restaurantApiPost) (*restaurantApi,
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusAccepted {
-		return nil, errors.New("server didn't respond OK")
+		return nil, errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	var rest restaurantApi
 	json.NewDecoder(resp.Body).Decode(&rest)
@@ -354,7 +354,7 @@ func UpdateRestaurant(ctx context.Context, restaurantId string, post restaurantA
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("server didn't respond OK")
+		return nil, errors.New(fmt.Sprintf("server: %s respond: %d: %s", url, resp.StatusCode, resp.Status))
 	}
 	var rest restaurantApi
 	json.NewDecoder(resp.Body).Decode(&rest)
