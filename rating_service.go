@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	ratingApiUrl = "http://localhost:8080"
+	ratingApiUrl = "http://192.168.1.155:8000/"
 )
 
 func init() {
