@@ -53,9 +53,9 @@ func init() {
 }
 
 func addRestaurantServiceEndpoints(r *gin.Engine) {
-	r.GET("/restaurants/", getRestaurants)
+	r.GET("/restaurants", getRestaurants)
 	r.GET("/restaurants/:restaurantId", getRestaurantById)
-	r.POST("/restaurants/", postRestaurant)
+	r.POST("/restaurants", postRestaurant)
 	r.PATCH("/restaurants/:restaurantId", patchRestaurant)
 	r.DELETE("/restaurants/:restaurantId", deleteRestaurant)
 }

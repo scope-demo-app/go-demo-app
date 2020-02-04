@@ -29,7 +29,17 @@ func main() {
 	log.Println("Starting server...")
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	r.Use(cors.Default())
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins:        true,
+		AllowMethods:           []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
+		AllowHeaders:           []string{"Origin", "Content-Length", "Content-Type"},
+		AllowCredentials:       true,
+		MaxAge:                 30 * time.Second,
+		AllowWildcard:          true,
+		AllowBrowserExtensions: true,
+		AllowWebSockets:        true,
+		AllowFiles:             true,
+	}))
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
 	r.GET("/", func(c *gin.Context) {
 		c.Status(http.StatusOK)
