@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -46,6 +47,8 @@ func postRating(c *gin.Context) {
 }
 
 func GetRatingByRestaurantId(ctx context.Context, restaurantId string) (*float64, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	url, err := getUrl(ratingApiUrl, "ratings", restaurantId)
 	if err != nil {
 		return nil, err
@@ -72,6 +75,8 @@ func GetRatingByRestaurantId(ctx context.Context, restaurantId string) (*float64
 }
 
 func AddRatingToRestaurant(ctx context.Context, restaurantId string, rating int) error {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	url, err := getUrl(ratingApiUrl, "ratings", restaurantId)
 	if err != nil {
 		return err

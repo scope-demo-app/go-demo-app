@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 var (
@@ -77,6 +78,8 @@ func postRestaurantImage(c *gin.Context) {
 //
 
 func GetImagesByRestaurant(ctx context.Context, restaurantId string) ([]string, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	url, err := getUrl(imagesApiUrl, "images", "restaurant", restaurantId)
 	if err != nil {
 		return nil, err
@@ -100,6 +103,8 @@ func GetImagesByRestaurant(ctx context.Context, restaurantId string) ([]string, 
 }
 
 func AddImageToRestaurant(ctx context.Context, restaurantId string, contentType string, data []byte) (string, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	url, err := getUrl(imagesApiUrl, "images", "restaurant", restaurantId)
 	if err != nil {
 		return "", err
@@ -130,6 +135,8 @@ func AddImageToRestaurant(ctx context.Context, restaurantId string, contentType 
 }
 
 func DeleteImagesByRestaurant(ctx context.Context, restaurantId string) error {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	imgs, err := GetImagesByRestaurant(ctx, restaurantId)
 	if err != nil {
 		return err
@@ -142,6 +149,8 @@ func DeleteImagesByRestaurant(ctx context.Context, restaurantId string) error {
 }
 
 func GetImage(ctx context.Context, imageId string) (string, []byte, error) {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	url, err := getUrl(imagesApiUrl, "images", imageId)
 	if err != nil {
 		return "", nil, err
@@ -173,6 +182,8 @@ func GetImage(ctx context.Context, imageId string) (string, []byte, error) {
 }
 
 func DeleteImage(ctx context.Context, imageId string) error {
+	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 	url, err := getUrl(imagesApiUrl, "images", imageId)
 	if err != nil {
 		return err
