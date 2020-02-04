@@ -58,6 +58,7 @@ func getRestaurantImages(c *gin.Context) {
 	values, err := GetImagesByRestaurant(ctx, restaurantId)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 	c.JSON(http.StatusOK, values)
 }
@@ -70,6 +71,7 @@ func postRestaurantImage(c *gin.Context) {
 	value, err := AddImageToRestaurant(ctx, restaurantId, c.Request.Header.Get("Content-Type"), bytes)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, value)
