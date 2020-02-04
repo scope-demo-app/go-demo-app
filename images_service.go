@@ -9,83 +9,43 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"os"
 )
 
 var (
 	imagesApiUrl = "http://localhost:8080"
 )
 
+func init() {
+	if svc, ok := os.LookupEnv("APP_IMAGES_SVC"); ok {
+		imagesApiUrl = svc
+	}
+}
+
 func addImageServiceEndpoints(r *gin.Engine) {
 	r.GET("/images/:imageId", getImage)
 	r.DELETE("/images/:imageId", deleteImage)
-
-	// TODO: delete the following endpoints
-	r.GET("/restaurant/:restaurantId/images", getRestaurantImages)
-	r.POST("/restaurant/:restaurantId/images", postRestaurantImage)
+	r.GET("/restaurants/:restaurantId/images", getRestaurantImages)
+	r.POST("/restaurants/:restaurantId/images", postRestaurantImage)
 }
 
 func getImage(c *gin.Context) {
 	ctx := c.Request.Context()
 	imageId := c.Param("imageId")
-
-	url, err := getUrl(imagesApiUrl, "images", imageId)
+	cType, body, err := GetImage(ctx, imageId)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		c.AbortWithError(http.StatusNotFound, err)
 		return
 	}
-
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		c.AbortWithError(resp.StatusCode, errors.New("server didn't respond OK"))
-		return
-	}
-
-	bytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-	contentType := resp.Header.Get("Content-type")
-	if contentType == "" {
-		contentType = http.DetectContentType(bytes)
-	}
-	c.Data(http.StatusOK, contentType, bytes)
+	c.Data(http.StatusOK, cType, body)
 }
 
 func deleteImage(c *gin.Context) {
 	ctx := c.Request.Context()
 	imageId := c.Param("imageId")
-
-	url, err := getUrl(imagesApiUrl, "images", imageId)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-	resp, err := http.DefaultClient.Do(req)
+	err := DeleteImage(ctx, imageId)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		c.AbortWithError(resp.StatusCode, errors.New("server didn't respond OK"))
 		return
 	}
 	c.Status(http.StatusOK)
@@ -94,7 +54,7 @@ func deleteImage(c *gin.Context) {
 func getRestaurantImages(c *gin.Context) {
 	ctx := c.Request.Context()
 	restaurantId := c.Param("restaurantId")
-	values, err := getImagesByRestaurant(ctx, restaurantId)
+	values, err := GetImagesByRestaurant(ctx, restaurantId)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
@@ -106,7 +66,7 @@ func postRestaurantImage(c *gin.Context) {
 	restaurantId := c.Param("restaurantId")
 
 	bytes, _ := ioutil.ReadAll(c.Request.Body)
-	value, err := postImageToRestaurant(ctx, restaurantId, c.Request.Header.Get("Content-Type"), bytes)
+	value, err := AddImageToRestaurant(ctx, restaurantId, c.Request.Header.Get("Content-Type"), bytes)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 	}
@@ -114,7 +74,9 @@ func postRestaurantImage(c *gin.Context) {
 	c.JSON(http.StatusOK, value)
 }
 
-func getImagesByRestaurant(ctx context.Context, restaurantId string) ([]string, error) {
+//
+
+func GetImagesByRestaurant(ctx context.Context, restaurantId string) ([]string, error) {
 	url, err := getUrl(imagesApiUrl, "images", "restaurant", restaurantId)
 	if err != nil {
 		return nil, err
@@ -137,7 +99,7 @@ func getImagesByRestaurant(ctx context.Context, restaurantId string) ([]string, 
 	return images, nil
 }
 
-func postImageToRestaurant(ctx context.Context, restaurantId string, contentType string, data []byte) (string, error) {
+func AddImageToRestaurant(ctx context.Context, restaurantId string, contentType string, data []byte) (string, error) {
 	url, err := getUrl(imagesApiUrl, "images", "restaurant", restaurantId)
 	if err != nil {
 		return "", err
@@ -156,7 +118,7 @@ func postImageToRestaurant(ctx context.Context, restaurantId string, contentType
 	}
 
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusAccepted {
 		return "", errors.New("server didn't respond OK")
 	}
 	var imageId string
@@ -165,4 +127,67 @@ func postImageToRestaurant(ctx context.Context, restaurantId string, contentType
 		return "", errors.New("image could not be uploaded")
 	}
 	return imageId, nil
+}
+
+func DeleteImagesByRestaurant(ctx context.Context, restaurantId string) error {
+	imgs, err := GetImagesByRestaurant(ctx, restaurantId)
+	if err != nil {
+		return err
+	}
+	var lastError error
+	for idx := range imgs {
+		lastError = DeleteImage(ctx, imgs[idx])
+	}
+	return lastError
+}
+
+func GetImage(ctx context.Context, imageId string) (string, []byte, error) {
+	url, err := getUrl(imagesApiUrl, "images", imageId)
+	if err != nil {
+		return "", nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return "", nil, err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", nil, errors.New("server didn't respond OK")
+	}
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", nil, err
+	}
+	contentType := resp.Header.Get("Content-type")
+	if contentType == "" {
+		contentType = http.DetectContentType(bodyBytes)
+	}
+	return contentType, bodyBytes, nil
+}
+
+func DeleteImage(ctx context.Context, imageId string) error {
+	url, err := getUrl(imagesApiUrl, "images", imageId)
+	if err != nil {
+		return err
+	}
+	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+	if err != nil {
+		return err
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated && resp.StatusCode != http.StatusAccepted {
+		return errors.New("server didn't respond OK")
+	}
+	return nil
 }

@@ -35,6 +35,8 @@ func main() {
 		c.Status(http.StatusOK)
 	})
 	addImageServiceEndpoints(r)
+	addRatingServiceEndpoints(r)
+	addRestaurantServiceEndpoints(r)
 
 	srv := &http.Server{
 		Addr:    ":8081",
