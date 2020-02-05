@@ -19,8 +19,7 @@ import (
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Llongfile)
-	//nethttp.WithPayloadInstrumentation()
-	nethttp.PatchHttpDefaultClient()
+	nethttp.PatchHttpDefaultClient(nethttp.WithPayloadInstrumentation())
 	scopeAgent, err := agent.NewAgent(agent.WithSetGlobalTracer(), agent.WithDebugEnabled())
 	if err != nil {
 		panic(err)
@@ -48,10 +47,9 @@ func main() {
 	addImageServiceEndpoints(r)
 	addRatingServiceEndpoints(r)
 	addRestaurantServiceEndpoints(r)
-	//nethttp.MWPayloadInstrumentation()
 	srv := &http.Server{
 		Addr:    ":8081",
-		Handler: nethttp.Middleware(r),
+		Handler: nethttp.Middleware(r, nethttp.MWPayloadInstrumentation()),
 	}
 
 	go func() {
