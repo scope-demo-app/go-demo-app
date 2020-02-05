@@ -90,7 +90,7 @@ func AddRatingToRestaurant(ctx context.Context, restaurantId string, rating int)
 	if err != nil {
 		return err
 	}
-	req, err := http.NewRequestWithContext(ctx, "post", url, strings.NewReader(fmt.Sprint(rating)))
+	req, err := http.NewRequestWithContext(ctx, "POST", url, strings.NewReader(fmt.Sprint(rating)))
 	if err != nil {
 		return err
 	}

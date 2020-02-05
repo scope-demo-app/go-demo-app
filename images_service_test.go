@@ -13,12 +13,12 @@ const restaurantId = "03d207b0-8015-4ab8-950b-8155b87e1654"
 
 func TestImagesService(t *testing.T) {
 	test := scopeagent.GetTest(t)
+	router := setupRouter()
 
 	var images []string
 	test.Run("GetImagesByRestaurant", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 
-		router := setupRouter()
 		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
 		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
 		w := httptest.NewRecorder()
@@ -38,7 +38,6 @@ func TestImagesService(t *testing.T) {
 		test.Run("GetImage", func(t *testing.T) {
 			ctx := scopeagent.GetContextFromTest(t)
 
-			router := setupRouter()
 			url := fmt.Sprintf("/images/%s", img)
 			req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
 			w := httptest.NewRecorder()
