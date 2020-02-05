@@ -35,7 +35,7 @@ func TestImagesService(t *testing.T) {
 	})
 
 	for _, img := range images {
-		t.Run("GetImage:"+img, func(t *testing.T) {
+		test.Run("GetImage", func(t *testing.T) {
 			ctx := scopeagent.GetContextFromTest(t)
 
 			router := setupRouter()
