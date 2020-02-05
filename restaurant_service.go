@@ -74,25 +74,39 @@ func getRestaurants(c *gin.Context) {
 		return
 	}
 	var rests []restaurant
+	var wg sync.WaitGroup
+	wg.Add(len(r) * 2)
+
 	for idx := range r {
-		rest := restaurant{restaurantApi: r[idx]}
+		rests = append(rests, restaurant{restaurantApi: r[idx]})
 
-		imgs, err := GetImagesByRestaurant(ctx, r[idx].Id)
-		if err != nil {
-			c.Error(err)
-		}
-		for _, item := range imgs {
-			rest.Images = append(rest.Images, fmt.Sprintf("/images/%s", item))
-		}
+		go func(index int) {
+			defer wg.Done()
 
-		rating, err := GetRatingByRestaurantId(ctx, r[idx].Id)
-		if err != nil {
-			c.Error(err)
-		}
-		rest.Rating = rating
+			imgs, err := GetImagesByRestaurant(ctx, r[index].Id)
+			if err != nil {
+				c.Error(err)
+			}
+			for _, item := range imgs {
+				rests[index].Images = append(rests[index].Images, fmt.Sprintf("/images/%s", item))
+			}
 
-		rests = append(rests, rest)
+		}(idx)
+
+		go func(index int) {
+			defer wg.Done()
+
+			rating, err := GetRatingByRestaurantId(ctx, r[index].Id)
+			if err != nil {
+				c.Error(err)
+			}
+			rests[index].Rating = rating
+
+		}(idx)
+
 	}
+
+	wg.Wait()
 	c.JSON(http.StatusOK, rests)
 }
 
@@ -108,20 +122,18 @@ func getRestaurantById(c *gin.Context) {
 	var ratingErr error
 	var wg sync.WaitGroup
 
-	wg.Add(1)
+	wg.Add(3)
 	go func() {
+		defer wg.Done()
 		r, rErr = GetRestaurantById(ctx, restaurantId)
-		wg.Done()
 	}()
-	wg.Add(1)
 	go func() {
+		defer wg.Done()
 		imgs, imgsErr = GetImagesByRestaurant(ctx, restaurantId)
-		wg.Done()
 	}()
-	wg.Add(1)
 	go func() {
+		defer wg.Done()
 		rating, ratingErr = GetRatingByRestaurantId(ctx, restaurantId)
-		wg.Done()
 	}()
 
 	wg.Wait()
