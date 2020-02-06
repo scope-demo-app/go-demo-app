@@ -48,7 +48,7 @@ func main() {
 	addRatingServiceEndpoints(r)
 	addRestaurantServiceEndpoints(r)
 	srv := &http.Server{
-		Addr:    ":8081",
+		Addr:    ":80",
 		Handler: nethttp.Middleware(r, nethttp.MWPayloadInstrumentation()),
 	}
 
