@@ -43,7 +43,7 @@ type (
 )
 
 var (
-	restaurantApiUrl = "https://java-demo-app.undefinedlabs.dev/" // "http://192.168.1.215:8081"
+	restaurantApiUrl = "https://java-demo-app.undefinedlabs.dev/"
 )
 
 func init() {

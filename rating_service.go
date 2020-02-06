@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	ratingApiUrl = "http://192.168.1.155:8000/"
+	ratingApiUrl = "https://python-demo-app.undefinedlabs.dev/"
 )
 
 func init() {

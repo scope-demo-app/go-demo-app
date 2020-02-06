@@ -19,5 +19,5 @@ services:
       - BUILD_URL
       - GIT_COMMIT=$GIT_COMMIT
       - APP_IMAGES_SVC=http://192.168.1.28:8080
-      - APP_RESTAURANT_SVC=http://192.168.1.215:8081
-      - APP_RATING_SVC=http://192.168.1.155:8000
+      - APP_RESTAURANT_SVC=https://java-demo-app.undefinedlabs.dev/
+      - APP_RATING_SVC=https://python-demo-app.undefinedlabs.dev/
