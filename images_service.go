@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	imagesApiUrl = "http://192.168.1.28:8080"
+	imagesApiUrl = "https://csharp-demo-app.undefinedlabs.dev/"
 )
 
 func init() {
