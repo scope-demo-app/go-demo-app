@@ -43,7 +43,7 @@ type (
 )
 
 var (
-	restaurantApiUrl = "http://192.168.1.215:8081"
+	restaurantApiUrl = "https://java-demo-app.undefinedlabs.dev/" // "http://192.168.1.215:8081"
 )
 
 func init() {
@@ -73,7 +73,7 @@ func getRestaurants(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	var rests []restaurant
+	rests := []restaurant{}
 	var wg sync.WaitGroup
 	wg.Add(len(r) * 2)
 
