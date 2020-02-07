@@ -17,10 +17,14 @@ import (
 	"time"
 )
 
+var GitRepo string
+var GitCommit string
+var GitSourceRoot string
+
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Llongfile)
 	nethttp.PatchHttpDefaultClient(nethttp.WithPayloadInstrumentation())
-	scopeAgent, err := agent.NewAgent(agent.WithSetGlobalTracer(), agent.WithDebugEnabled())
+	scopeAgent, err := agent.NewAgent(agent.WithSetGlobalTracer(), agent.WithDebugEnabled(), agent.WithGitInfo(GitRepo, GitCommit, GitSourceRoot))
 	if err != nil {
 		panic(err)
 	}
