@@ -2,9 +2,8 @@ FROM golang:latest as Builder
 WORKDIR /app
 COPY . /app
 RUN GitCommit=$(git rev-parse HEAD) && \
- GitRepo=$(git remote get-url origin) && \
  GitSourceRoot=$(git rev-parse --show-toplevel) && \
- CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o go-demo-app -ldflags "-X main.GitCommit=$GitCommit -X main.GitRepo=$GitRepo -X main.GitSourceRoot=$GitSourceRoot" .
+ CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o go-demo-app -ldflags "-X main.GitCommit=$GitCommit -X main.GitSourceRoot=$GitSourceRoot" .
 
 FROM alpine
 RUN apk update && apk add ca-certificates

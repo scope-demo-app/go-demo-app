@@ -17,7 +17,6 @@ import (
 	"time"
 )
 
-var GitRepo string
 var GitCommit string
 var GitSourceRoot string
 
@@ -26,7 +25,7 @@ func main() {
 	nethttp.PatchHttpDefaultClient(nethttp.WithPayloadInstrumentation())
 	opts := []agent.Option{agent.WithSetGlobalTracer(), agent.WithDebugEnabled()}
 	if GitCommit != "" {
-		opts = append(opts, agent.WithGitInfo(GitRepo, GitCommit, GitSourceRoot))
+		opts = append(opts, agent.WithGitInfo("", GitCommit, GitSourceRoot))
 	}
 	scopeAgent, err := agent.NewAgent(opts...)
 	if err != nil {
