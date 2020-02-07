@@ -24,7 +24,11 @@ var GitSourceRoot string
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Llongfile)
 	nethttp.PatchHttpDefaultClient(nethttp.WithPayloadInstrumentation())
-	scopeAgent, err := agent.NewAgent(agent.WithSetGlobalTracer(), agent.WithDebugEnabled(), agent.WithGitInfo(GitRepo, GitCommit, GitSourceRoot))
+	opts := []agent.Option{agent.WithSetGlobalTracer(), agent.WithDebugEnabled()}
+	if GitCommit != "" {
+		opts = append(opts, agent.WithGitInfo(GitRepo, GitCommit, GitSourceRoot))
+	}
+	scopeAgent, err := agent.NewAgent(opts...)
 	if err != nil {
 		panic(err)
 	}
