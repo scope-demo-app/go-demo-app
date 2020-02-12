@@ -28,4 +28,3 @@ jobs:
       uses: undefinedlabs/scope-for-go-action@1.1.0
       with:
         dsn: ${{ secrets.SCOPE_DSN }}
-
