@@ -75,7 +75,7 @@ func TestImagesService(t *testing.T) {
 		}
 	})
 
-	test.Run("EmptyPost", func (t *testing.T) {
+	test.Run("EmptyPost", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 
 		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
