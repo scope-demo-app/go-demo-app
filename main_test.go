@@ -22,6 +22,7 @@ func TestMain(m *testing.M) {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
+
 	addImageServiceEndpoints(r)
 	addRatingServiceEndpoints(r)
 	addRestaurantServiceEndpoints(r)
