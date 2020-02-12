@@ -75,6 +75,25 @@ func TestImagesService(t *testing.T) {
 		}
 	})
 
+	test.Run("EmptyPost", func (t *testing.T) {
+		ctx := scopeagent.GetContextFromTest(t)
+
+		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
+		req, _ := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader([]byte{}))
+		req.Header.Add("Content-Type", "image/custom")
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+		res := w.Result()
+
+		if res.StatusCode != http.StatusOK {
+			t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+		}
+		json.NewDecoder(res.Body).Decode(&imageId)
+		if imageId == "" {
+			t.Fatal("imageId is nil")
+		}
+	})
+
 	if imageId != "" {
 		test.Run("Delete", func(t *testing.T) {
 			ctx := scopeagent.GetContextFromTest(t)
