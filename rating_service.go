@@ -34,23 +34,23 @@ func postRating(c *gin.Context) {
 	bytes, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		panic(err)
 	}
 	ratingStr := string(bytes)
 	rating, err := strconv.Atoi(ratingStr)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		panic(err)
 	}
 	err = AddRatingToRestaurant(ctx, restaurantId, rating)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		panic(err)
 	}
 	newRating, err := GetRatingByRestaurantId(ctx, restaurantId)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		panic(err)
 	}
 	c.Writer.WriteString(fmt.Sprintf("%v", *newRating))
 }

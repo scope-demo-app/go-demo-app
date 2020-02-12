@@ -6,9 +6,15 @@ require (
 	github.com/gin-contrib/cors v1.3.0
 	github.com/gin-contrib/gzip v0.0.1
 	github.com/gin-gonic/gin v1.5.0
+	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/golang/protobuf v1.3.3 // indirect
+	github.com/json-iterator/go v1.1.9 // indirect
+	github.com/leodido/go-urn v1.2.0 // indirect
+	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/opentracing/opentracing-go v1.1.0
-	go.undefinedlabs.com/scopeagent v0.1.8-0.20200205144002-f2b9949fbeb0
+	go.undefinedlabs.com/scopeagent v0.1.11
 	golang.org/x/net v0.0.0-20200202094626-16171245cfb2 // indirect
-	golang.org/x/sys v0.0.0-20200202164722-d101bd2416d5 // indirect
+	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4 // indirect
+	gopkg.in/go-playground/validator.v9 v9.31.0 // indirect
+	gopkg.in/yaml.v2 v2.2.8 // indirect
 )

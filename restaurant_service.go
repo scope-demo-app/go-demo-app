@@ -71,7 +71,7 @@ func getRestaurants(c *gin.Context) {
 	}
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		panic(err)
 	}
 	rests := []restaurant{}
 	var wg sync.WaitGroup
@@ -162,12 +162,12 @@ func postRestaurant(c *gin.Context) {
 	err := c.BindJSON(&restRq)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		panic(err)
 	}
 	r, err := AddRestaurant(ctx, restRq.restaurantApiPost)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		panic(err)
 	}
 	var rest = restaurant{restaurantApi: *r}
 	if restRq.Images != nil {
@@ -190,13 +190,13 @@ func patchRestaurant(c *gin.Context) {
 	err := c.BindJSON(&restRq)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		panic(err)
 	}
 
 	r, err := UpdateRestaurant(ctx, restaurantId, restRq)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		panic(err)
 	}
 
 	rest := restaurant{restaurantApi: *r}
@@ -217,7 +217,7 @@ func deleteRestaurant(c *gin.Context) {
 	err := DeleteRestaurantById(ctx, restaurantId)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		panic(err)
 	}
 
 	err = DeleteImagesByRestaurant(ctx, restaurantId)

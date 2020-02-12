@@ -35,8 +35,8 @@ func getImage(c *gin.Context) {
 	imageId := c.Param("imageId")
 	cType, body, err := GetImage(ctx, imageId)
 	if err != nil {
-		c.AbortWithError(http.StatusNotFound, err)
-		return
+		c.AbortWithStatus(http.StatusNotFound)
+		panic(err)
 	}
 	c.Data(http.StatusOK, cType, body)
 }
@@ -47,7 +47,7 @@ func deleteImage(c *gin.Context) {
 	err := DeleteImage(ctx, imageId)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		return
+		panic(err)
 	}
 	c.Status(http.StatusOK)
 }
@@ -58,7 +58,7 @@ func getRestaurantImages(c *gin.Context) {
 	values, err := GetImagesByRestaurant(ctx, restaurantId)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		panic(err)
 	}
 	c.JSON(http.StatusOK, values)
 }
@@ -71,7 +71,7 @@ func postRestaurantImage(c *gin.Context) {
 	value, err := AddImageToRestaurant(ctx, restaurantId, c.Request.Header.Get("Content-Type"), bytes)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		return
+		panic(err)
 	}
 
 	c.JSON(http.StatusOK, value)

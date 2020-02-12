@@ -5,7 +5,9 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
+	"github.com/opentracing/opentracing-go"
 	"go.undefinedlabs.com/scopeagent/agent"
+	"go.undefinedlabs.com/scopeagent/errors"
 	"go.undefinedlabs.com/scopeagent/instrumentation/nethttp"
 	"log"
 	"math/rand"
@@ -49,6 +51,7 @@ func main() {
 		AllowWebSockets:        true,
 		AllowFiles:             true,
 	}))
+	r.Use(logErrorOnSpanMiddleware)
 	r.Use(errorInjectionMiddleware)
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
 	r.GET("/", func(c *gin.Context) {
@@ -119,11 +122,25 @@ func errorInjectionMiddleware(c *gin.Context) {
 	if qKeyFailurePercentage != "" {
 		if failurePercentage, err := strconv.Atoi(qKeyFailurePercentage); err == nil {
 			if rand.Intn(100) <= failurePercentage {
-				c.AbortWithStatus(http.StatusInternalServerError)
-				return
+				//c.AbortWithStatus(http.StatusInternalServerError)
+				//return
+				panic("error processing request.")
 			}
 		}
 	}
 
+	c.Next()
+}
+
+func logErrorOnSpanMiddleware(c *gin.Context) {
+	sp := opentracing.SpanFromContext(c.Request.Context())
+	defer func() {
+		if r := recover(); r != nil {
+			if r != errors.MarkSpanAsError {
+				errors.LogError(sp, r, 1)
+			}
+			panic(r)
+		}
+	}()
 	c.Next()
 }
