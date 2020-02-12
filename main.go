@@ -142,5 +142,6 @@ func logErrorOnSpanMiddleware(c *gin.Context) {
 			panic(r)
 		}
 	}()
+
 	c.Next()
 }
