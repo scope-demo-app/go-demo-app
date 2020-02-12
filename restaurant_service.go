@@ -140,7 +140,7 @@ func getRestaurantById(c *gin.Context) {
 
 	if rErr != nil {
 		c.AbortWithError(http.StatusInternalServerError, rErr)
-		return
+		panic(rErr)
 	}
 	if imgsErr != nil {
 		c.Error(imgsErr)
