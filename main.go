@@ -8,11 +8,13 @@ import (
 	"go.undefinedlabs.com/scopeagent/agent"
 	"go.undefinedlabs.com/scopeagent/instrumentation/nethttp"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"os"
 	"os/signal"
 	"path"
+	"strconv"
 	"syscall"
 	"time"
 )
@@ -47,6 +49,7 @@ func main() {
 		AllowWebSockets:        true,
 		AllowFiles:             true,
 	}))
+	r.Use(errorInjectionMiddleware)
 	r.Use(gzip.Gzip(gzip.DefaultCompression))
 	r.GET("/", func(c *gin.Context) {
 		c.Status(http.StatusOK)
@@ -89,4 +92,38 @@ func getUrl(base string, pathValues ...string) (string, error) {
 	args = append(args, pathValues...)
 	url.Path = path.Join(args...)
 	return url.String(), nil
+}
+
+func errorInjectionMiddleware(c *gin.Context) {
+	const keySleep = "rs.sleep"
+	const keyStatus = "rs.status"
+	const keyFailurePercentage = "rs.failure"
+
+	qKeySleep := c.Query(keySleep)
+	qKeyStatus := c.Query(keyStatus)
+	qKeyFailurePercentage := c.Query(keyFailurePercentage)
+
+	if qKeySleep != "" {
+		if sleepValue, err := strconv.Atoi(qKeySleep); err == nil {
+			<-time.After(time.Duration(sleepValue) * time.Millisecond)
+		}
+	}
+
+	if qKeyStatus != "" {
+		if statusValue, err := strconv.Atoi(qKeyStatus); err == nil {
+			c.AbortWithStatus(statusValue)
+			return
+		}
+	}
+
+	if qKeyFailurePercentage != "" {
+		if failurePercentage, err := strconv.Atoi(qKeyFailurePercentage); err == nil {
+			if rand.Intn(100) <= failurePercentage {
+				c.AbortWithStatus(http.StatusInternalServerError)
+				return
+			}
+		}
+	}
+
+	c.Next()
 }
