@@ -386,7 +386,7 @@ func UpdateRestaurant(ctx context.Context, restaurantId string, post restaurantA
 }
 
 func getTimeoutDuration() time.Duration {
-	duration := time.Duration(rand.Intn(100)) * time.Millisecond
+	duration := time.Duration(rand.Intn(50)) * time.Millisecond
 	c := atomic.AddInt64(&counter, 1)
 	if c%2 == 0 {
 		duration = time.Duration(rand.Intn(500)) * time.Millisecond
