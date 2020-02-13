@@ -1,7 +1,6 @@
 name: AutoCommit
 on:
   schedule:
-    # * is a special character in YAML so you have to quote this string
     - cron:  '*/5 * * * *'
 
 jobs:
@@ -16,7 +15,7 @@ jobs:
 
       - name: Create local changes
         run: |
-          sed '$s/$/ /' README.md
+          echo -e "\t \n" >> README.md
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
