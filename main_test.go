@@ -13,11 +13,13 @@ import (
 func TestMain(m *testing.M) {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Llongfile)
 	nethttp.PatchHttpDefaultClient(nethttp.WithPayloadInstrumentation())
-	os.Exit(scopeagent.Run(m, agent.WithSetGlobalTracer(), agent.WithDebugEnabled()))
+	os.Exit(scopeagent.Run(m, agent.WithSetGlobalTracer(), agent.WithDebugEnabled(), agent.WithRetriesOnFail(3)))
 }
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
+	r.Use(logErrorOnSpanMiddleware)
+	r.Use(errorInjectionMiddleware)
 	addImageServiceEndpoints(r)
 	addRatingServiceEndpoints(r)
 	addRestaurantServiceEndpoints(r)

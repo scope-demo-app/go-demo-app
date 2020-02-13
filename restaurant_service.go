@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -46,6 +47,7 @@ type (
 
 var (
 	restaurantApiUrl = "https://java-demo-app.undefinedlabs.dev/"
+	counter          int64
 )
 
 func init() {
@@ -115,9 +117,7 @@ func getRestaurants(c *gin.Context) {
 }
 
 func getRestaurantById(c *gin.Context) {
-	duration := time.Duration(rand.Intn(800)) * time.Millisecond
-	fmt.Println(duration)
-	ctx, cancel := context.WithTimeout(c.Request.Context(), duration)
+	ctx, cancel := context.WithTimeout(c.Request.Context(), getTimeoutDuration())
 	defer cancel()
 	restaurantId := c.Param("restaurantId")
 
@@ -147,9 +147,6 @@ func getRestaurantById(c *gin.Context) {
 
 	if rErr != nil {
 		c.AbortWithError(http.StatusInternalServerError, rErr)
-		if err := ctx.Err(); err != nil {
-			<-time.After(5 * time.Second)
-		}
 		panic(rErr)
 	}
 	if imgsErr != nil {
@@ -386,4 +383,17 @@ func UpdateRestaurant(ctx context.Context, restaurantId string, post restaurantA
 	var rest restaurantApi
 	json.NewDecoder(resp.Body).Decode(&rest)
 	return &rest, nil
+}
+
+func getTimeoutDuration() time.Duration {
+	duration := time.Duration(rand.Intn(150)) * time.Millisecond
+	c := atomic.AddInt64(&counter, 1)
+	if c%2 == 0 {
+		duration = time.Duration(rand.Intn(500)) * time.Millisecond
+	}
+	if c%3 == 0 {
+		duration = time.Duration(rand.Intn(800)) * time.Millisecond
+	}
+	fmt.Println(duration)
+	return duration
 }

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go.undefinedlabs.com/scopeagent"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -13,6 +14,9 @@ import (
 func TestRestaurantService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 	router := setupRouter()
+	for i := 0; i < 30; i++ {
+		rand.Int()
+	}
 
 	test.Run("All", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
