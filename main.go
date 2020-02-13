@@ -136,11 +136,16 @@ func logErrorOnSpanMiddleware(c *gin.Context) {
 	sp := opentracing.SpanFromContext(c.Request.Context())
 	defer func() {
 		if r := recover(); r != nil {
-			if r != errors.MarkSpanAsError {
-				errors.LogError(sp, r, 1)
-			}
+			errors.LogError(sp, r, 1)
 			panic(r)
 		}
 	}()
 	c.Next()
+}
+
+func logError(c *gin.Context, err error) {
+	sp := opentracing.SpanFromContext(c.Request.Context())
+	if sp != nil {
+		errors.LogError(sp, err, 1)
+	}
 }

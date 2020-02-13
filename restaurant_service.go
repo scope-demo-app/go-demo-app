@@ -7,9 +7,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"math/rand"
 	"net/http"
 	"os"
 	"sync"
+	"time"
 )
 
 type (
@@ -73,7 +75,7 @@ func getRestaurants(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		panic(err)
 	}
-	rests := []restaurant{}
+	rests := make([]restaurant, 0)
 	var wg sync.WaitGroup
 	wg.Add(len(r) * 2)
 
@@ -86,6 +88,7 @@ func getRestaurants(c *gin.Context) {
 			imgs, err := GetImagesByRestaurant(ctx, r[index].Id)
 			if err != nil {
 				c.Error(err)
+				logError(c, err)
 			}
 			for _, item := range imgs {
 				rests[index].Images = append(rests[index].Images, fmt.Sprintf("/images/%s", item))
@@ -99,6 +102,7 @@ func getRestaurants(c *gin.Context) {
 			rating, err := GetRatingByRestaurantId(ctx, r[index].Id)
 			if err != nil {
 				c.Error(err)
+				logError(c, err)
 			}
 			rests[index].Rating = rating
 
@@ -111,7 +115,10 @@ func getRestaurants(c *gin.Context) {
 }
 
 func getRestaurantById(c *gin.Context) {
-	ctx := c.Request.Context()
+	duration := time.Duration(rand.Intn(800)) * time.Millisecond
+	fmt.Println(duration)
+	ctx, cancel := context.WithTimeout(c.Request.Context(), duration)
+	defer cancel()
 	restaurantId := c.Param("restaurantId")
 
 	var r *restaurantApi
@@ -140,13 +147,18 @@ func getRestaurantById(c *gin.Context) {
 
 	if rErr != nil {
 		c.AbortWithError(http.StatusInternalServerError, rErr)
+		if err := ctx.Err(); err != nil {
+			<-time.After(5 * time.Second)
+		}
 		panic(rErr)
 	}
 	if imgsErr != nil {
 		c.Error(imgsErr)
+		logError(c, imgsErr)
 	}
 	if ratingErr != nil {
 		c.Error(ratingErr)
+		logError(c, ratingErr)
 	}
 	var rest = restaurant{restaurantApi: *r}
 	for _, item := range imgs {
@@ -175,6 +187,7 @@ func postRestaurant(c *gin.Context) {
 			imgId, err := AddImageToRestaurant(ctx, rest.Id, item.MimeType, item.Data)
 			if err != nil {
 				c.Error(err)
+				logError(c, err)
 			}
 			rest.Images = append(rest.Images, fmt.Sprintf("/images/%s", imgId))
 		}
@@ -203,6 +216,7 @@ func patchRestaurant(c *gin.Context) {
 	imgs, err := GetImagesByRestaurant(ctx, r.Id)
 	if err != nil {
 		c.Error(err)
+		logError(c, err)
 	}
 	for _, item := range imgs {
 		rest.Images = append(rest.Images, fmt.Sprintf("/images/%s", item))
@@ -223,6 +237,7 @@ func deleteRestaurant(c *gin.Context) {
 	err = DeleteImagesByRestaurant(ctx, restaurantId)
 	if err != nil {
 		c.Error(err)
+		logError(c, err)
 	}
 }
 
