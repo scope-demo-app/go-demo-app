@@ -96,7 +96,6 @@ func getUrl(base string, pathValues ...string) (string, error) {
 	url.Path = path.Join(args...)
 	return url.String(), nil
 }
-
 func errorInjectionMiddleware(c *gin.Context) {
 	const keySleep = "rs.sleep"
 	const keyStatus = "rs.status"
@@ -147,5 +146,6 @@ func logError(c *gin.Context, err error) {
 	sp := opentracing.SpanFromContext(c.Request.Context())
 	if sp != nil {
 		errors.LogError(sp, err, 1)
+		sp.SetTag("error", false)
 	}
 }

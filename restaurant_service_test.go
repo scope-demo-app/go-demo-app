@@ -36,7 +36,9 @@ func TestRestaurantService(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		fmt.Println(resPayload)
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
 	})
 
 	var rsPayload restaurantApi
@@ -63,6 +65,9 @@ func TestRestaurantService(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
 		fmt.Println(rsPayload)
 	})
 
@@ -84,6 +89,9 @@ func TestRestaurantService(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
 		fmt.Println(resPayload)
 	})
 
@@ -98,6 +106,9 @@ func TestRestaurantService(t *testing.T) {
 
 		if res.StatusCode != http.StatusOK {
 			t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
 		}
 	})
 }

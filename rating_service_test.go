@@ -25,6 +25,9 @@ func TestRatingService(t *testing.T) {
 		if rating != nil {
 			fmt.Println(*rating)
 		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
 	})
 
 	test.Run("Add", func(t *testing.T) {
@@ -44,5 +47,8 @@ func TestRatingService(t *testing.T) {
 			t.Fatal(err)
 		}
 		fmt.Println(string(bytes))
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
 	})
 }

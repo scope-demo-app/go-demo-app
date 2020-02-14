@@ -33,6 +33,9 @@ func TestImagesService(t *testing.T) {
 		if images == nil {
 			t.Fatal("images can't be nil")
 		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
 	})
 
 	for _, img := range images {
@@ -51,6 +54,9 @@ func TestImagesService(t *testing.T) {
 
 			if res.ContentLength == 0 {
 				t.Fatal("content length is nil")
+			}
+			if ctx.Err() != nil {
+				t.Fatal(ctx.Err())
 			}
 		})
 	}
@@ -73,6 +79,9 @@ func TestImagesService(t *testing.T) {
 		if imageId == "" {
 			t.Fatal("imageId is nil")
 		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
 	})
 
 	if imageId != "" {
@@ -88,7 +97,9 @@ func TestImagesService(t *testing.T) {
 			if res.StatusCode != http.StatusOK {
 				t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
 			}
-
+			if ctx.Err() != nil {
+				t.Fatal(ctx.Err())
+			}
 		})
 	}
 

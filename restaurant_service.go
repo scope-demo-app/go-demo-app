@@ -151,11 +151,11 @@ func getRestaurantById(c *gin.Context) {
 	}
 	if imgsErr != nil {
 		c.Error(imgsErr)
-		logError(c, imgsErr)
+		panic(imgsErr)
 	}
 	if ratingErr != nil {
 		c.Error(ratingErr)
-		logError(c, ratingErr)
+		panic(ratingErr)
 	}
 	var rest = restaurant{restaurantApi: *r}
 	for _, item := range imgs {
@@ -289,11 +289,11 @@ func GetAllRestaurantsByName(ctx context.Context, name string) ([]restaurantApi,
 	if err != nil {
 		return nil, err
 	}
-	url = fmt.Sprintf("%s?name=%s", url, name)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
+	req.URL.Query().Add("name", name)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
