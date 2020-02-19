@@ -1,7 +1,7 @@
 name: AutoCommit
 on:
   schedule:
-    - cron:  '* */6 * * *'
+    - cron:  '0 */8 * * *'
 
 jobs:
 
