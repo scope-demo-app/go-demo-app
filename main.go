@@ -26,6 +26,7 @@ var GitSourceRoot string
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds | log.Llongfile)
+	rand.Seed(time.Now().UnixNano())
 	nethttp.PatchHttpDefaultClient(nethttp.WithPayloadInstrumentation())
 	opts := []agent.Option{agent.WithSetGlobalTracer(), agent.WithDebugEnabled()}
 	if GitCommit != "" {

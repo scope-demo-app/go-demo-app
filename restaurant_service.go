@@ -293,7 +293,9 @@ func GetAllRestaurantsByName(ctx context.Context, name string) ([]restaurantApi,
 	if err != nil {
 		return nil, err
 	}
-	req.URL.Query().Add("name", name)
+	q := req.URL.Query()
+	q.Add("name", name)
+	req.URL.RawQuery = q.Encode()
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
@@ -390,9 +392,6 @@ func getTimeoutDuration() time.Duration {
 	c := atomic.AddInt64(&counter, 1)
 	if c%2 == 0 {
 		duration = time.Duration(rand.Intn(500)) * time.Millisecond
-	}
-	if c%3 == 0 {
-		duration = time.Duration(rand.Intn(800)) * time.Millisecond
 	}
 	fmt.Println(duration)
 	return duration
