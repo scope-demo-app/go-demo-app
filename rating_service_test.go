@@ -12,7 +12,6 @@ import (
 
 func TestRatingService(t *testing.T) {
 	test := scopeagent.GetTest(t)
-	router := setupRouter()
 
 	test.Run("Get", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)

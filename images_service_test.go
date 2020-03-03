@@ -14,7 +14,6 @@ const restaurantId = "03d207b0-8015-4ab8-950b-8155b87e1654"
 
 func TestImagesService(t *testing.T) {
 	test := scopeagent.GetTest(t)
-	router := setupRouter()
 
 	var images []string
 	test.Run("AllByRestaurant", func(t *testing.T) {
