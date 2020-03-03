@@ -13,9 +13,10 @@ import (
 func TestRestaurantService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 
-	test.Run("All", func(t *testing.T) {
+	test.Run("all-demo", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 
+		t.Log("getting all restaurants")
 		url := "/restaurants"
 		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
 		w := httptest.NewRecorder()
@@ -34,10 +35,11 @@ func TestRestaurantService(t *testing.T) {
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
 		}
+		t.Log("all ok")
 	})
 
 	var rsPayload restaurantApi
-	test.Run("Create", func(t *testing.T) {
+	test.Run("create-demo", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 
 		rqPayload := restaurantApiPost{
@@ -45,6 +47,8 @@ func TestRestaurantService(t *testing.T) {
 			Description: "TestDescription",
 		}
 		rqPayloadJson, _ := json.Marshal(rqPayload)
+
+		t.Log("creating restaurant")
 
 		url := "/restaurants"
 		req, _ := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(rqPayloadJson))
@@ -63,11 +67,12 @@ func TestRestaurantService(t *testing.T) {
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
 		}
-		fmt.Println(rsPayload)
+		t.Log(rsPayload)
 	})
 
-	test.Run("Get", func(t *testing.T) {
+	test.Run("get-demo", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("getting restaurant")
 
 		url := fmt.Sprintf("/restaurants/%s", rsPayload.Id)
 		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
@@ -87,11 +92,12 @@ func TestRestaurantService(t *testing.T) {
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
 		}
-		fmt.Println(resPayload)
+		t.Log(resPayload)
 	})
 
-	test.Run("Delete", func(t *testing.T) {
+	test.Run("delete-demo", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("deleting restaurant")
 
 		url := fmt.Sprintf("/restaurants/%s", rsPayload.Id)
 		req, _ := http.NewRequestWithContext(ctx, "DELETE", url, nil)
@@ -105,6 +111,8 @@ func TestRestaurantService(t *testing.T) {
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
 		}
+
+		t.Log("all ok")
 	})
 }
 

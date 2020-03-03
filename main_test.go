@@ -5,6 +5,7 @@ import (
 	"go.undefinedlabs.com/scopeagent"
 	"go.undefinedlabs.com/scopeagent/agent"
 	"go.undefinedlabs.com/scopeagent/instrumentation/nethttp"
+	scopetesting "go.undefinedlabs.com/scopeagent/instrumentation/testing"
 	"log"
 	"math/rand"
 	"os"
@@ -19,6 +20,7 @@ func TestMain(m *testing.M) {
 	nethttp.PatchHttpDefaultClient(nethttp.WithPayloadInstrumentation())
 	rand.Seed(time.Now().UnixNano())
 	router = setupRouter()
+	scopetesting.PatchTestingLogger()
 	os.Exit(scopeagent.Run(m, agent.WithSetGlobalTracer(), agent.WithDebugEnabled(), agent.WithRetriesOnFail(3)))
 }
 

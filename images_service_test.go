@@ -16,8 +16,9 @@ func TestImagesService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 
 	var images []string
-	test.Run("AllByRestaurant", func(t *testing.T) {
+	test.Run("all-by-restaurant-demo", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("getting all images by restaurant")
 
 		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
 		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
@@ -35,11 +36,13 @@ func TestImagesService(t *testing.T) {
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
 		}
+		t.Log("all ok")
 	})
 
 	for _, img := range images {
-		test.Run("Get", func(t *testing.T) {
+		test.Run("get-demo", func(t *testing.T) {
 			ctx := scopeagent.GetContextFromTest(t)
+			t.Log("getting an image of a restaurant")
 
 			url := fmt.Sprintf("/images/%s", img)
 			req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
@@ -57,12 +60,14 @@ func TestImagesService(t *testing.T) {
 			if ctx.Err() != nil {
 				t.Fatal(ctx.Err())
 			}
+			t.Log("all ok")
 		})
 	}
 
 	var imageId string
-	test.Run("Post", func(t *testing.T) {
+	test.Run("post-demo", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("posting an image of a restaurant")
 
 		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
 		req, _ := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader([]byte{0, 1, 2, 3}))
@@ -81,11 +86,13 @@ func TestImagesService(t *testing.T) {
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
 		}
+		t.Log("all ok")
 	})
 
 	if imageId != "" {
-		test.Run("Delete", func(t *testing.T) {
+		test.Run("delete-demo", func(t *testing.T) {
 			ctx := scopeagent.GetContextFromTest(t)
+			t.Log("deleting an image of a restaurant")
 
 			url := fmt.Sprintf("/images/%s", imageId)
 			req, _ := http.NewRequestWithContext(ctx, "DELETE", url, nil)
@@ -99,6 +106,7 @@ func TestImagesService(t *testing.T) {
 			if ctx.Err() != nil {
 				t.Fatal(ctx.Err())
 			}
+			t.Log("all ok")
 		})
 	}
 

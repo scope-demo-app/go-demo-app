@@ -13,8 +13,9 @@ import (
 func TestRatingService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 
-	test.Run("Get", func(t *testing.T) {
+	test.Run("get-demo", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("getting rating")
 
 		rating, err := GetRatingByRestaurantId(ctx, restaurantId)
 		if err != nil {
@@ -22,15 +23,17 @@ func TestRatingService(t *testing.T) {
 		}
 
 		if rating != nil {
-			fmt.Println(*rating)
+			t.Log(*rating)
 		}
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
 		}
+		t.Log("all ok")
 	})
 
-	test.Run("Add", func(t *testing.T) {
+	test.Run("add-demo", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("add rating")
 
 		url := fmt.Sprintf("/rating/%s", restaurantId)
 		req, _ := http.NewRequestWithContext(ctx, "POST", url, strings.NewReader("4"))
@@ -49,5 +52,6 @@ func TestRatingService(t *testing.T) {
 		if ctx.Err() != nil {
 			t.Fatal(ctx.Err())
 		}
+		t.Log("all ok")
 	})
 }
