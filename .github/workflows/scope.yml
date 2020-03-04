@@ -28,3 +28,12 @@ jobs:
       uses: undefinedlabs/scope-for-go-action@1.1.0
       with:
         dsn: ${{ secrets.SCOPE_DSN }}
+      env:
+        SCOPE_DEBUG: true
+
+    - name: Upload Scope logs
+      if: always()
+      uses: actions/upload-artifact@v1
+      with:
+        name: Scope for Go logs
+        path: /home/runner/.scope-results
