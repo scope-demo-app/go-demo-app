@@ -126,3 +126,24 @@ func TestBasicEmpty(t *testing.T) {
 		}
 	}
 }
+
+var benchdata = restaurantApi{
+	restaurantApiPost: restaurantApiPost{
+		Name:        "TestName",
+		Description: "TestDescription",
+	},
+	Id:        "1234567890",
+	Latitude:  nil,
+	Longitude: nil,
+}
+
+func BenchmarkJsonEncoding(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = json.Marshal(&benchdata)
+	}
+}
+func BenchmarkJsonEncodingWithIndent(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, _ = json.MarshalIndent(&benchdata, "", "  ")
+	}
+}
