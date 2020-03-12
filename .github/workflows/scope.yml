@@ -24,6 +24,7 @@ jobs:
             dep ensure
         fi
 
+
     - name: Scope for Go
       uses: undefinedlabs/scope-for-go-action@custom
       with:
