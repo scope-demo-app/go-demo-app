@@ -31,7 +31,6 @@ jobs:
       env:
         SCOPE_DEBUG: true
 
-
     - name: Upload Scope logs
       if: always()
       uses: actions/upload-artifact@v1
