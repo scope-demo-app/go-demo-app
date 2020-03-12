@@ -24,12 +24,14 @@ jobs:
             dep ensure
         fi
 
+
     - name: Scope for Go
       uses: undefinedlabs/scope-for-go-action@custom
       with:
         dsn: ${{ secrets.SCOPE_DSN }}
       env:
         SCOPE_DEBUG: true
+
 
     - name: Upload Scope logs
       if: always()
