@@ -133,10 +133,9 @@ func errorInjectionMiddleware(c *gin.Context) {
 }
 
 func logErrorOnSpanMiddleware(c *gin.Context) {
-	sp := opentracing.SpanFromContext(c.Request.Context())
 	defer func() {
 		if r := recover(); r != nil {
-			errors.LogError(sp, r, 1)
+			errors.LogPanic(c.Request.Context(), r, 1)
 			panic(r)
 		}
 	}()
@@ -146,7 +145,7 @@ func logErrorOnSpanMiddleware(c *gin.Context) {
 func logError(c *gin.Context, err error) {
 	sp := opentracing.SpanFromContext(c.Request.Context())
 	if sp != nil {
-		errors.LogError(sp, err, 1)
+		errors.LogPanic(c.Request.Context(), err, 1)
 		sp.SetTag("error", false)
 	}
 }
