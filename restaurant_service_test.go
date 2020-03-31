@@ -137,3 +137,4 @@ func BenchmarkJsonEncodingWithIndent(b *testing.B) {
 		_, _ = json.MarshalIndent(&benchdata, "", "  ")
 	}
 }
+
