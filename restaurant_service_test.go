@@ -72,6 +72,31 @@ func TestRestaurantService(t *testing.T) {
 		t.Log(rsPayload)
 	})
 
+	test.Run("demotest-get", func(t *testing.T) {
+		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("getting restaurant")
+
+		url := fmt.Sprintf("/restaurants/%s", rsPayload.Id)
+		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+		res := w.Result()
+
+		if res.StatusCode != http.StatusOK {
+			t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+		}
+
+		var resPayload restaurant
+		err := json.NewDecoder(res.Body).Decode(&resPayload)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
+		t.Log(resPayload)
+	})
+
 	test.Run("delete", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 		t.Log("deleting restaurant")
