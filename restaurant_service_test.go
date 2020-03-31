@@ -41,7 +41,7 @@ func TestRestaurantService(t *testing.T) {
 	})
 
 	var rsPayload restaurantApi
-	test.Run("create", func(t *testing.T) {
+	test.Run("demotest-create", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 
 		rqPayload := restaurantApiPost{
@@ -93,16 +93,27 @@ func TestRestaurantService(t *testing.T) {
 	})
 }
 
-func TestDummyBasicEmpty(t *testing.T) {
+func TestDummySlowBasicEmpty(t *testing.T) {
 	test := scopeagent.GetTest(t)
 	idx := 0
-	for i := 0; i < 50; i++ {
-		for j := i; j < 50; j++ {
-			idx++
-			test.Run(fmt.Sprintf("%d", idx), func(t *testing.T) {
-				time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
-			})
-		}
+	for i := 0; i < 200; i++ {
+		idx++
+		test.Run(fmt.Sprintf("%d", idx), func(t *testing.T) {
+			t.Parallel()
+			time.Sleep(time.Duration(rand.Intn(10000)) * time.Millisecond)
+		})
+	}
+}
+
+func TestDummyQuickBasicEmpty(t *testing.T) {
+	test := scopeagent.GetTest(t)
+	idx := 0
+	for j := 0; j < 50; j++ {
+		idx++
+		test.Run(fmt.Sprintf("%d", idx), func(t *testing.T) {
+			t.Parallel()
+			time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
+		})
 	}
 }
 
