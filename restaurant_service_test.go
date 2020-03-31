@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"go.undefinedlabs.com/scopeagent"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 func TestRestaurantService(t *testing.T) {
@@ -91,13 +93,15 @@ func TestRestaurantService(t *testing.T) {
 	})
 }
 
-func TestBasicEmpty(t *testing.T) {
+func TestDummyBasicEmpty(t *testing.T) {
 	test := scopeagent.GetTest(t)
 	idx := 0
 	for i := 0; i < 50; i++ {
 		for j := i; j < 50; j++ {
 			idx++
-			test.Run(fmt.Sprintf("%d", idx), func(t *testing.T) {})
+			test.Run(fmt.Sprintf("%d", idx), func(t *testing.T) {
+				time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
+			})
 		}
 	}
 }
