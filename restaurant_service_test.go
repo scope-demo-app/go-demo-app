@@ -76,7 +76,7 @@ func TestRestaurantService(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 		t.Log("getting restaurant")
 
-		url := fmt.Sprintf("/restaurants/%s", rsPayload.Id)
+		url := fmt.Sprintf("/restaurants/00000000-0000-0000-0000-000000000001", rsPayload.Id)
 		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
 		w := httptest.NewRecorder()
 		router.ServeHTTP(w, req)
