@@ -80,7 +80,7 @@ func postRestaurantImage(c *gin.Context) {
 //
 
 func GetImagesByRestaurant(ctx context.Context, restaurantId string) ([]string, error) {
-	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 	url, err := getUrl(imagesApiUrl, "images", "restaurant", restaurantId)
 	if err != nil {
