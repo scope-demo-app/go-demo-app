@@ -16,7 +16,7 @@ func TestImagesService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 
 	var images []string
-	test.Run("all-by-restaurant-demo", func(t *testing.T) {
+	test.Run("demotest-all-by-restaurant", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 		t.Log("getting all images by restaurant")
 
@@ -40,7 +40,7 @@ func TestImagesService(t *testing.T) {
 	})
 
 	for _, img := range images {
-		test.Run("get-demo", func(t *testing.T) {
+		test.Run("get", func(t *testing.T) {
 			ctx := scopeagent.GetContextFromTest(t)
 			t.Log("getting an image of a restaurant")
 
@@ -65,7 +65,7 @@ func TestImagesService(t *testing.T) {
 	}
 
 	var imageId string
-	test.Run("post-demo", func(t *testing.T) {
+	test.Run("post", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 		t.Log("posting an image of a restaurant")
 
@@ -90,7 +90,7 @@ func TestImagesService(t *testing.T) {
 	})
 
 	if imageId != "" {
-		test.Run("delete-demo", func(t *testing.T) {
+		test.Run("delete", func(t *testing.T) {
 			ctx := scopeagent.GetContextFromTest(t)
 			t.Log("deleting an image of a restaurant")
 

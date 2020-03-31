@@ -13,7 +13,7 @@ import (
 func TestRestaurantService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 
-	test.Run("all-demo", func(t *testing.T) {
+	test.Run("demotest-all", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 
 		t.Log("getting all restaurants")
@@ -39,7 +39,7 @@ func TestRestaurantService(t *testing.T) {
 	})
 
 	var rsPayload restaurantApi
-	test.Run("create-demo", func(t *testing.T) {
+	test.Run("create", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 
 		rqPayload := restaurantApiPost{
@@ -70,7 +70,7 @@ func TestRestaurantService(t *testing.T) {
 		t.Log(rsPayload)
 	})
 
-	test.Run("delete-demo", func(t *testing.T) {
+	test.Run("delete", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 		t.Log("deleting restaurant")
 

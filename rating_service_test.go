@@ -13,7 +13,7 @@ import (
 func TestRatingService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 
-	test.Run("get-demo", func(t *testing.T) {
+	test.Run("demotest-get", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 		t.Log("getting rating")
 
@@ -31,7 +31,7 @@ func TestRatingService(t *testing.T) {
 		t.Log("all ok")
 	})
 
-	test.Run("add-demo", func(t *testing.T) {
+	test.Run("add", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 		t.Log("add rating")
 
