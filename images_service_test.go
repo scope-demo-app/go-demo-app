@@ -12,78 +12,29 @@ import (
 
 const restaurantId = "03d207b0-8015-4ab8-950b-8155b87e1654"
 
-func TestImagesService(t *testing.T) {
+func TestDemoTestImageServiceAllByRestaurant01(t *testing.T) {
 	test := scopeagent.GetTest(t)
 
 	var images []string
-	test.Run("demotest-all-by-restaurant-1", func(t *testing.T) {
-		ctx := scopeagent.GetContextFromTest(t)
-		t.Log("getting all images by restaurant")
+	ctx := test.Context()
+	t.Log("getting all images by restaurant")
 
-		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
-		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		res := w.Result()
+	url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
+	req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	res := w.Result()
 
-		if res.StatusCode != http.StatusOK {
-			t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
-		}
-		json.NewDecoder(res.Body).Decode(&images)
-		if images == nil {
-			t.Fatal("images can't be nil")
-		}
-		if ctx.Err() != nil {
-			t.Fatal(ctx.Err())
-		}
-		t.Log("all ok")
-	})
-
-	test.Run("demotest-all-by-restaurant-2", func(t *testing.T) {
-		ctx := scopeagent.GetContextFromTest(t)
-		t.Log("getting all images by restaurant")
-
-		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
-		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		res := w.Result()
-
-		if res.StatusCode != http.StatusOK {
-			t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
-		}
-		json.NewDecoder(res.Body).Decode(&images)
-		if images == nil {
-			t.Fatal("images can't be nil")
-		}
-		if ctx.Err() != nil {
-			t.Fatal(ctx.Err())
-		}
-		t.Log("all ok")
-	})
-
-	test.Run("demotest-all-by-restaurant-3", func(t *testing.T) {
-		ctx := scopeagent.GetContextFromTest(t)
-		t.Log("getting all images by restaurant")
-
-		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
-		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
-		w := httptest.NewRecorder()
-		router.ServeHTTP(w, req)
-		res := w.Result()
-
-		if res.StatusCode != http.StatusOK {
-			t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
-		}
-		json.NewDecoder(res.Body).Decode(&images)
-		if images == nil {
-			t.Fatal("images can't be nil")
-		}
-		if ctx.Err() != nil {
-			t.Fatal(ctx.Err())
-		}
-		t.Log("all ok")
-	})
+	if res.StatusCode != http.StatusOK {
+		t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+	}
+	json.NewDecoder(res.Body).Decode(&images)
+	if images == nil {
+		t.Fatal("images can't be nil")
+	}
+	if ctx.Err() != nil {
+		t.Fatal(ctx.Err())
+	}
 
 	for _, img := range images {
 		test.Run("get", func(t *testing.T) {
@@ -109,6 +60,116 @@ func TestImagesService(t *testing.T) {
 			t.Log("all ok")
 		})
 	}
+
+	t.Log("all ok")
+}
+
+func TestDemoTestImageServiceAllByRestaurant02(t *testing.T) {
+	test := scopeagent.GetTest(t)
+
+	var images []string
+	ctx := test.Context()
+	t.Log("getting all images by restaurant")
+
+	url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
+	req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	res := w.Result()
+
+	if res.StatusCode != http.StatusOK {
+		t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+	}
+	json.NewDecoder(res.Body).Decode(&images)
+	if images == nil {
+		t.Fatal("images can't be nil")
+	}
+	if ctx.Err() != nil {
+		t.Fatal(ctx.Err())
+	}
+
+	for _, img := range images {
+		test.Run("get", func(t *testing.T) {
+			ctx := scopeagent.GetContextFromTest(t)
+			t.Log("getting an image of a restaurant")
+
+			url := fmt.Sprintf("/images/%s", img)
+			req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			res := w.Result()
+
+			if res.StatusCode != http.StatusOK {
+				t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+			}
+
+			if res.ContentLength == 0 {
+				t.Fatal("content length is nil")
+			}
+			if ctx.Err() != nil {
+				t.Fatal(ctx.Err())
+			}
+			t.Log("all ok")
+		})
+	}
+	t.Log("all ok")
+}
+
+func TestDemoTestImageServiceAllByRestaurant03(t *testing.T) {
+	test := scopeagent.GetTest(t)
+
+	var images []string
+	ctx := test.Context()
+	t.Log("getting all images by restaurant")
+
+	url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
+	req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	res := w.Result()
+
+	if res.StatusCode != http.StatusOK {
+		t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+	}
+	json.NewDecoder(res.Body).Decode(&images)
+	if images == nil {
+		t.Fatal("images can't be nil")
+	}
+	if ctx.Err() != nil {
+		t.Fatal(ctx.Err())
+	}
+
+	for _, img := range images {
+		test.Run("get", func(t *testing.T) {
+			ctx := scopeagent.GetContextFromTest(t)
+			t.Log("getting an image of a restaurant")
+
+			url := fmt.Sprintf("/images/%s", img)
+			req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			res := w.Result()
+
+			if res.StatusCode != http.StatusOK {
+				t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+			}
+
+			if res.ContentLength == 0 {
+				t.Fatal("content length is nil")
+			}
+			if ctx.Err() != nil {
+				t.Fatal(ctx.Err())
+			}
+			t.Log("all ok")
+		})
+	}
+
+	t.Log("all ok")
+}
+
+
+func TestImagesService(t *testing.T) {
+	test := scopeagent.GetTest(t)
 
 	var imageId string
 	test.Run("post", func(t *testing.T) {
