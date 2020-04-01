@@ -44,7 +44,17 @@ func main() {
 	r.Use(cors.New(cors.Config{
 		AllowAllOrigins:        true,
 		AllowMethods:           []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
-		AllowHeaders:           []string{"Origin", "Content-Length", "Content-Type"},
+		AllowHeaders:           []string{
+			"Origin",
+			"Content-Length",
+			"Content-Type",
+			"ot-tracer-traceid",
+			"ot-tracer-spanid",
+			"ot-tracer-parentspanid",
+			"ot-tracer-sampled",
+			"traceparent",
+			"tracestate",
+		},
 		AllowCredentials:       true,
 		MaxAge:                 30 * time.Second,
 		AllowWildcard:          true,
