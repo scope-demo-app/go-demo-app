@@ -30,7 +30,7 @@ These instructions will get you a copy of the project up and running on your loc
 This project is already configured with Scope. You just need to run the tests using the following command:
 
 ```bash
-go-demo-app > go test -v ./...
+go-demo-app > go test -v -bench=. ./...
 ```
 
 ### Reviewing the tests
