@@ -16,7 +16,53 @@ func TestImagesService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 
 	var images []string
-	test.Run("demotest-all-by-restaurant", func(t *testing.T) {
+	test.Run("demotest-all-by-restaurant-1", func(t *testing.T) {
+		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("getting all images by restaurant")
+
+		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
+		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+		res := w.Result()
+
+		if res.StatusCode != http.StatusOK {
+			t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+		}
+		json.NewDecoder(res.Body).Decode(&images)
+		if images == nil {
+			t.Fatal("images can't be nil")
+		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
+		t.Log("all ok")
+	})
+
+	test.Run("demotest-all-by-restaurant-2", func(t *testing.T) {
+		ctx := scopeagent.GetContextFromTest(t)
+		t.Log("getting all images by restaurant")
+
+		url := fmt.Sprintf("/restaurants/%s/images", restaurantId)
+		req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
+		w := httptest.NewRecorder()
+		router.ServeHTTP(w, req)
+		res := w.Result()
+
+		if res.StatusCode != http.StatusOK {
+			t.Fatalf("server: %s respond: %d: %s", url, res.StatusCode, res.Status)
+		}
+		json.NewDecoder(res.Body).Decode(&images)
+		if images == nil {
+			t.Fatal("images can't be nil")
+		}
+		if ctx.Err() != nil {
+			t.Fatal(ctx.Err())
+		}
+		t.Log("all ok")
+	})
+
+	test.Run("demotest-all-by-restaurant-3", func(t *testing.T) {
 		ctx := scopeagent.GetContextFromTest(t)
 		t.Log("getting all images by restaurant")
 
