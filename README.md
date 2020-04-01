@@ -11,7 +11,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 1. Install Golang 1.14 following these [instructions](https://golang.org/doc/install)
-2. Download and configure the Scope native app for Mac/Windows [here](https://app.scope.dev/local-dev/instructions)
+2. Download and configure Scope for Mac/Windows [here](https://app.scope.dev/local-dev/instructions). For other platforms (including Linux), manually set up the SCOPE_DSN for local development as shown [here](https://app.scope.dev/local-dev/manual-setup)
 
 ### Installing
 
