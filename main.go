@@ -52,6 +52,7 @@ func main() {
 			"ot-tracer-spanid",
 			"ot-tracer-parentspanid",
 			"ot-tracer-sampled",
+			"ot-baggage-trace.kind",
 			"traceparent",
 			"tracestate",
 		},
