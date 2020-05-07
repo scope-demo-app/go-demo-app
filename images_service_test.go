@@ -167,8 +167,6 @@ func TestDemoTestImageServiceAllByRestaurant03(t *testing.T) {
 	t.Log("all ok")
 }
 
-
-
 func TestImagesService(t *testing.T) {
 	test := scopeagent.GetTest(t)
 

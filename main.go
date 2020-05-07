@@ -42,9 +42,9 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowAllOrigins:        true,
-		AllowMethods:           []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
-		AllowHeaders:           []string{
+		AllowAllOrigins: true,
+		AllowMethods:    []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
+		AllowHeaders: []string{
 			"Origin",
 			"Content-Length",
 			"Content-Type",
