@@ -27,6 +27,7 @@ jobs:
             dep ensure
         fi
 
+
     - name: Scope for Go
       uses: undefinedlabs/scope-for-go-action@v2
       with:
@@ -36,6 +37,7 @@ jobs:
         SCOPE_DEBUG: true
         SCOPE_RUNNER_ENABLED: true
         SCOPE_RUNNER_EXCLUDE_BRANCHES: master
+
 
     - name: Upload Scope logs
       if: always()
