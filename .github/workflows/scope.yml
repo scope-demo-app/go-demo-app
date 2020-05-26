@@ -31,7 +31,10 @@ jobs:
       with:
         dsn: ${{ secrets.SCOPE_DSN }}
       env:
+        SCOPE_TESTING_FAIL_RETRIES: 3
         SCOPE_DEBUG: true
+        SCOPE_RUNNER_ENABLED: true
+        SCOPE_RUNNER_EXCLUDE_BRANCHES: master
 
     - name: Upload Scope logs
       if: always()
