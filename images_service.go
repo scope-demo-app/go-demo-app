@@ -18,6 +18,7 @@ var (
 )
 
 func init() {
+	fmt.Println("test")
 	if svc, ok := os.LookupEnv("APP_IMAGES_SVC"); ok {
 		imagesApiUrl = svc
 	}
